@@ -16,8 +16,41 @@ export const createPost = async(req, res) => {
     return res.json(newPost)
 };
 
-export const updatePost = (req, res) => res.send("Actuliizando un post");
+export const updatePost = async(req, res) => {
+    
+    // const { title, description } = req.body;
+    // const updatedPost = await Post.findByIdAndUpdate(req.params.id, {
+    //     title,
+    //     description
+    // }, { new: true })
 
-export const deletePost = (req, res) => res.send("Borrando un post");
+    // res.json(updatedPost)
 
-export const getPost = (req, res) => res.send("Obteniendo un post");
+    const post = await Post.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    console.log(post)
+    res.send('post updated')
+
+};
+
+export const deletePost = async(req, res) => {
+    
+    const postRemove = await Post.findByIdAndDelete(req.params.id)
+    if (!postRemove) {
+        return res.status(404).send('Post not found')
+    }
+
+    return res.status(204).send('Post deleted')
+
+};
+
+export const getPost = async(req, res) => {
+    
+    const post = await Post.findById(req.params.id)
+
+    if (!post) {
+        return res.status(404).send('Post not found')
+    }
+
+    return res.json(post)
+
+};
